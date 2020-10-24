@@ -19,5 +19,5 @@ class ToDoViewModel(
         repository.delete(item)
     }
 
-    fun getAllShoppingItems() = repository.getAllToDoItems()
+    fun getAllToDoItems() = repository.getAllToDoItems()
 }
