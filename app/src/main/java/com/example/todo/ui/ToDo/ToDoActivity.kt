@@ -2,6 +2,7 @@ package com.example.todo.ui.ToDo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -12,6 +13,7 @@ import com.example.todo.data.db.ToDoDatabase
 import com.example.todo.data.db.entity.ToDoItem
 import com.example.todo.data.repositories.ToDoRepository
 import com.example.todo.others.ToDoItemAdapter
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_todo.*
 
 class ToDoActivity : AppCompatActivity() {
@@ -52,6 +54,11 @@ class ToDoActivity : AppCompatActivity() {
                 val position = viewHolder.adapterPosition
                 val item = adapter.differ.currentList[position]
                 viewModel.delete(item)
+                Snackbar.make(activity_todo,"ToDo Deleted",Snackbar.LENGTH_LONG).apply {
+                    setAction("UNDO"){
+                        viewModel.insert(item)
+                    }
+                }.show()
             }
         }
 
@@ -64,6 +71,7 @@ class ToDoActivity : AppCompatActivity() {
             object : AddBottomDialogListener{
                 override fun onAddButtonClicked(item: ToDoItem) {
                     viewModel.insert(item)
+                    Snackbar.make(it,"ToDo Added",Snackbar.LENGTH_SHORT).show()
                 }
             }).show(supportFragmentManager,"BottomSheetDialog")
         }
@@ -72,4 +80,7 @@ class ToDoActivity : AppCompatActivity() {
 
 
     }
+
+
+
 }
