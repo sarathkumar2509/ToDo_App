@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
 import com.example.todo.data.db.ToDoDatabase
 import com.example.todo.data.db.entity.ToDoItem
@@ -23,15 +25,17 @@ class ToDoActivity : AppCompatActivity() {
 
         val viewModel = ViewModelProviders.of(this,factory).get(ToDoViewModel::class.java)
 
-        val adapter = ToDoItemAdapter(listOf(),viewModel)
+        val adapter = ToDoItemAdapter()
 
         rvToDoitems.layoutManager = LinearLayoutManager(this)
         rvToDoitems.adapter = adapter
 
         viewModel.getAllToDoItems().observe(this , Observer {
-            adapter.items = it
+            adapter.differ.submitList(it.toList())
             adapter.notifyDataSetChanged()
         })
+
+
 
         fabAdd.setOnClickListener{
             AddToDoItemBottomDialog(this,
@@ -41,5 +45,6 @@ class ToDoActivity : AppCompatActivity() {
                 }
             }).show(supportFragmentManager,"BottomSheetDialog")
         }
+
     }
 }
